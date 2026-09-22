@@ -16,7 +16,31 @@ Runtime: **Herdr 0.9.1 or newer and fzf** on Linux or macOS. Developed and used 
 
 Build: **Bun** plus the dev dependencies in `package.json`. The compiled executable embeds Bun, so neither Bun nor Node is needed at runtime. Build on each target OS/architecture you want to run it on.
 
-## Build
+## Install
+
+Have **Git and Bun** available on your `PATH` for installation, plus **Herdr and fzf** to use the plugin:
+
+```sh
+herdr plugin install trucke/herdr-project-switcher
+```
+
+Herdr clones the repository, installs its build dependencies with Bun and compiles the executable. Bun is only needed for installation or rebuilding, not for running the picker. Herdr does not install Git, Bun or fzf for you.
+
+From a terminal inside Herdr, open the picker:
+
+```sh
+herdr plugin action invoke sudokvn.project-switcher.open
+```
+
+You can also add the keybinding below. Installation is global for your user, not limited to one session. If you already linked a local checkout, keep using that or unlink it before installing from GitHub.
+
+To remove a GitHub-installed copy:
+
+```sh
+herdr plugin uninstall sudokvn.project-switcher
+```
+
+## Build locally
 
 ```sh
 bun install --frozen-lockfile
@@ -27,7 +51,7 @@ bun run build
 
 Output: `dist/herdr-project-switcher`. The source is three TypeScript files with no runtime npm dependencies. `bun run dev -- open` runs the action from source when Herdr's plugin environment variables are present.
 
-## Link and bind
+## Local linking and keybinding
 
 Build first: `herdr plugin link` registers the manifest but does not run its build commands. Linking is global for your user, not scoped to the current session.
 
@@ -58,7 +82,7 @@ herdr plugin unlink sudokvn.project-switcher
 
 ## Configuration
 
-Optional. Find the managed config directory after linking and create `config.json` there:
+Optional. Find the managed config directory after installing or linking and create `config.json` there:
 
 ```sh
 herdr plugin config-dir sudokvn.project-switcher
