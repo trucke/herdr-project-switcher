@@ -1,0 +1,26 @@
+id = "sudokvn.project-switcher"
+name = "Herdr Project Switcher"
+version = "0.1.0"
+min_herdr_version = "0.9.1"
+description = "Fuzzy-find projects and open a fresh workspace"
+platforms = ["linux", "macos"]
+
+[[build]]
+command = ["bun", "install", "--frozen-lockfile"]
+
+[[build]]
+command = ["bun", "run", "build"]
+
+[[actions]]
+id = "open"
+title = "Switch project"
+contexts = ["workspace"]
+command = ["./dist/herdr-project-switcher", "open"]
+
+[[panes]]
+id = "picker"
+title = "Projects"
+placement = "popup"
+width = 90
+height = 16
+command = ["./dist/herdr-project-switcher", "pick"]
