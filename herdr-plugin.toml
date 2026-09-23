@@ -2,7 +2,7 @@ id = "sudokvn.project-switcher"
 name = "Herdr Project Switcher"
 version = "0.1.0"
 min_herdr_version = "0.9.1"
-description = "Fuzzy-find projects and open a fresh workspace"
+description = "Fuzzy-find projects and switch to their workspaces"
 platforms = ["linux", "macos"]
 
 [[build]]

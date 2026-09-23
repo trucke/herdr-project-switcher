@@ -1,6 +1,6 @@
 # Herdr Project Switcher
 
-An fzf project picker in a floating [Herdr](https://herdr.dev) popup. Every selection opens the chosen project in a **new workspace**, even if that project already has one.
+An fzf project picker in a floating [Herdr](https://herdr.dev) popup. Selecting a project focuses its open workspace or creates one if needed.
 
 ## Requirements
 
@@ -33,7 +33,7 @@ Then run `herdr server reload-config`.
 
 ## Controls
 
-- Enter opens the selected project in a new workspace.
+- Enter switches to an open workspace with the project's name, or opens a new workspace if none matches.
 - Enter with no match asks whether to create an empty project directory with that name. Enter confirms, Escape cancels.
 - Escape or Ctrl-C closes the picker.
 

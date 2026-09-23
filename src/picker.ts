@@ -33,7 +33,7 @@ async function fzf(items: readonly string[], args: string[]) {
 export async function pickProject(projects: readonly string[], query = "") {
   const { output, code } = await fzf(projects, [
     "--no-extended", "--print-query", "--query", query, "--prompt=Project > ",
-    "--header=Enter: new workspace | No match: offer creation | Esc: cancel",
+    "--header=Enter: switch/open workspace | No match: offer creation | Esc: cancel",
     "--bind=enter:accept,esc:abort,ctrl-c:abort",
   ]);
   return parseChoice(code, output, projects);

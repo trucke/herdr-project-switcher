@@ -10,6 +10,29 @@ export async function herdr(args: string[]) {
     new Response(child.stdout).text(), new Response(child.stderr).text(), child.exited,
   ]);
   if (code !== 0) throw new Error(`Herdr failed (exit ${code}): ${stderr || stdout}`);
+  return stdout;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+export function openWorkspaceId(output: string, name: string): string | undefined {
+  const response: unknown = JSON.parse(output);
+  if (!isRecord(response) || !isRecord(response.result) ||
+    response.result.type !== "workspace_list" || !Array.isArray(response.result.workspaces)) {
+    throw new Error("Invalid Herdr workspace list");
+  }
+  const workspaces: unknown[] = response.result.workspaces;
+  let match: string | undefined;
+  for (const workspace of workspaces) {
+    if (!isRecord(workspace) || typeof workspace.label !== "string" ||
+      typeof workspace.workspace_id !== "string" || !workspace.workspace_id) {
+      throw new Error("Invalid Herdr workspace list");
+    }
+    if (workspace.label === name && match === undefined) match = workspace.workspace_id;
+  }
+  return match;
 }
 
 export function openArgs(placement: "popup" | "overlay") {
@@ -45,9 +68,12 @@ async function main() {
     }
     if (choice.kind === "create" && !await confirmCreation(choice.name)) return;
     const path = await projectPath(root, choice.name, choice.kind === "create");
-    // Never list/reuse workspaces. Focus before exit; Herdr then reaps the transient UI.
-    // A failed CLI request is not retried: it may already have created the workspace.
-    await herdr(["workspace", "create", "--cwd", path, "--focus"]);
+    const workspaceId = choice.kind === "select"
+      ? openWorkspaceId(await herdr(["workspace", "list"]), choice.name)
+      : undefined;
+    // Focus before exit; Herdr then reaps the transient UI. A failed request is not retried.
+    if (workspaceId) await herdr(["workspace", "focus", workspaceId]);
+    else await herdr(["workspace", "create", "--cwd", path, "--label", choice.name, "--focus"]);
     return;
   }
 }
